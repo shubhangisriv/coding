@@ -1,0 +1,394 @@
+package zcom.jdbc;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class Addbookauthor {
+		Connection con;
+		PreparedStatement pre;
+		PreparedStatement pre1;
+		PreparedStatement pre2;
+		Statement stat;
+		Statement stats;
+		Statement stat1;
+		ResultSet res;
+		ResultSet results;
+		ResultSet res1;
+		String bname;
+		int price;
+		String aname;
+		
+		
+		
+		 public Addbookauthor() {
+	
+		
+			try
+			{
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl","system","seed1234");
+				System.out.println("Database Connected....");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		public void insert()
+
+
+		{
+			try
+			{
+				Scanner sc=new Scanner(System.in);
+				System.out.println("enter book name");
+				bname=sc.next();
+				System.out.println("Enterbook price.");
+				price=sc.nextInt();
+			
+				System.out.println("enter author name");
+				aname=sc.next();
+				
+				
+				
+				pre=con.prepareStatement("insert into books values(sequence_1.nextval,?,?)");
+				
+				pre.setString(1, bname);
+				pre.setInt(2,price);
+				
+				int ra=pre.executeUpdate();
+				
+pre1=con.prepareStatement("insert into author values(sequence_2.nextval,?)");
+				
+				pre1.setString(1, aname);
+				
+				int ra1=pre1.executeUpdate();
+				
+				if(ra>0 && ra1>0)
+					System.out.println(" Details Committed..");
+				else
+					System.out.println(" Details are Not Committed..");
+				pre.close();
+				pre1.close();
+					
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		public void printDetails()
+
+		{
+			try
+			{
+				stat=con.createStatement();
+				stat1=con.createStatement();
+				res=stat.executeQuery("select * from books");
+				res1=stat1.executeQuery("select * from author");
+				while(res.next())
+				{
+					System.out.println("book id : "+res.getInt("bid"));
+					System.out.println("book name : "+res.getString("bname"));
+					System.out.println("price : "+res.getInt("price"));
+					System.out.println("");
+				}
+				while(res1.next())
+				{
+					System.out.println("author id : "+res1.getInt("aid"));
+					System.out.println("author name : "+res1.getString("fname"));
+					System.out.println("");
+				}
+				
+				
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		
+		public void updateDetails()
+
+
+		{
+			try
+			{
+				pre2=con.prepareStatement("update books set price=? where bid=(select bid from author where fname=?)" );
+				Scanner sc1=new Scanner(System.in);
+				System.out.println("enter price to update");
+				int pri=sc1.nextInt();
+				System.out.println("enter author name");
+				String str=sc1.next();
+				
+				
+				pre2.setInt(1, pri);
+				pre2.setString(2,str);
+				int ra2=pre2.executeUpdate();
+				if(ra2>0)
+					System.out.println("price updated for autho name");
+				else
+					System.out.println("author is not updated..");
+				pre.close();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		
+		public void getData()
+		{
+			try 
+			{
+				// Creates query object for database connected through con object
+				stats=con.createStatement();
+				//Executes SQL Select Query and returns data as ResultSet Object
+				Scanner sc1=new Scanner(System.in);
+				System.out.println("enter author id to get the details");
+				int aid=sc1.nextInt();
+				results=stats.executeQuery("select * from books where bid=(select bid from author where aid="+aid+")");
+				
+				
+
+				while(results.next())
+				{
+					System.out.println(results.getInt("bid"));
+					System.out.println(results.getString("bname"));
+					System.out.println(results.getInt("price"));
+				
+					System.out.println("===============================");
+				}
+				
+			} 
+			catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		
+		
+		public static void main(String[] args) {
+			
+			Addbookauthor uttam=new Addbookauthor();
+			uttam.insert();
+			uttam.printDetails();
+			System.out.println("=======================================================");
+			uttam.updateDetails();
+			uttam.printDetails();
+			
+			System.out.println("=======================================================");
+			uttam.getData();
+			
+			
+			
+		}
+
+	}
+
+
+package zcom.jdbc;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class Addbookauthor {
+		Connection con;
+		PreparedStatement pre;
+		PreparedStatement pre1;
+		PreparedStatement pre2;
+		Statement stat;
+		Statement stats;
+		Statement stat1;
+		ResultSet res;
+		ResultSet results;
+		ResultSet res1;
+		String bname;
+		int price;
+		String aname;
+		
+		
+		
+		 public Addbookauthor() {
+	
+		
+			try
+			{
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl","system","seed1234");
+				System.out.println("Database Connected....");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		public void insert()
+
+
+		{
+			try
+			{
+				Scanner sc=new Scanner(System.in);
+				System.out.println("enter book name");
+				bname=sc.next();
+				System.out.println("Enterbook price.");
+				price=sc.nextInt();
+			
+				System.out.println("enter author name");
+				aname=sc.next();
+				
+				
+				
+				pre=con.prepareStatement("insert into books values(sequence_1.nextval,?,?)");
+				
+				pre.setString(1, bname);
+				pre.setInt(2,price);
+				
+				int ra=pre.executeUpdate();
+				
+pre1=con.prepareStatement("insert into author values(sequence_2.nextval,?)");
+				
+				pre1.setString(1, aname);
+				
+				int ra1=pre1.executeUpdate();
+				
+				if(ra>0 && ra1>0)
+					System.out.println(" Details Committed..");
+				else
+					System.out.println(" Details are Not Committed..");
+				pre.close();
+				pre1.close();
+					
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		public void printDetails()
+
+		{
+			try
+			{
+				stat=con.createStatement();
+				stat1=con.createStatement();
+				res=stat.executeQuery("select * from books");
+				res1=stat1.executeQuery("select * from author");
+				while(res.next())
+				{
+					System.out.println("book id : "+res.getInt("bid"));
+					System.out.println("book name : "+res.getString("bname"));
+					System.out.println("price : "+res.getInt("price"));
+					System.out.println("");
+				}
+				while(res1.next())
+				{
+					System.out.println("author id : "+res1.getInt("aid"));
+					System.out.println("author name : "+res1.getString("fname"));
+					System.out.println("");
+				}
+				
+				
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		
+		public void updateDetails()
+
+
+		{
+			try
+			{
+				pre2=con.prepareStatement("update books set price=? where bid=(select bid from author where fname=?)" );
+				Scanner sc1=new Scanner(System.in);
+				System.out.println("enter price to update");
+				int pri=sc1.nextInt();
+				System.out.println("enter author name");
+				String str=sc1.next();
+				
+				
+				pre2.setInt(1, pri);
+				pre2.setString(2,str);
+				int ra2=pre2.executeUpdate();
+				if(ra2>0)
+					System.out.println("price updated for autho name");
+				else
+					System.out.println("author is not updated..");
+				pre.close();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		
+		public void getData()
+		{
+			try 
+			{
+				// Creates query object for database connected through con object
+				stats=con.createStatement();
+				//Executes SQL Select Query and returns data as ResultSet Object
+				Scanner sc1=new Scanner(System.in);
+				System.out.println("enter author id to get the details");
+				int aid=sc1.nextInt();
+				results=stats.executeQuery("select * from books where bid=(select bid from author where aid="+aid+")");
+				
+				
+
+				while(results.next())
+				{
+					System.out.println(results.getInt("bid"));
+					System.out.println(results.getString("bname"));
+					System.out.println(results.getInt("price"));
+				
+					System.out.println("===============================");
+				}
+				
+			} 
+			catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		
+		
+		public static void main(String[] args) {
+			
+			Addbookauthor uttam=new Addbookauthor();
+			uttam.insert();
+			uttam.printDetails();
+			System.out.println("=======================================================");
+			uttam.updateDetails();
+			uttam.printDetails();
+			
+			System.out.println("=======================================================");
+			uttam.getData();
+			
+			
+			
+		}
+
+	}
+
+
